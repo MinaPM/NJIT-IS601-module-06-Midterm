@@ -58,16 +58,21 @@ class Calculation:
         """
         # Mapping of operation names to their corresponding functions
         operations = {
+            "Power": lambda x, y: Decimal(pow(float(x), float(y))) if y >= 0 else self._raise_neg_power(),
+            "Root": lambda x, y: (
+                Decimal(pow(float(x), 1 / float(y)))
+                if x >= 0 and y != Decimal(0)
+                else self._raise_invalid_root(x, y)
+            ),
+            "Modulus": lambda x, y: x % y if y != 0 else self._raise_div_zero(),
+            "Integer Division": lambda x, y: int(x) // int(y) if int(y) != 0 else self._raise_div_zero(),
+            "Percentage": lambda x, y: (x * y) / Decimal(100),
+            "Absolute Difference": lambda x, y: abs(x - y),
+
             "Addition": lambda x, y: x + y,
             "Subtraction": lambda x, y: x - y,
             "Multiplication": lambda x, y: x * y,
             "Division": lambda x, y: x / y if y != 0 else self._raise_div_zero(),
-            "Power": lambda x, y: Decimal(pow(float(x), float(y))) if y >= 0 else self._raise_neg_power(),
-            "Root": lambda x, y: (
-                Decimal(pow(float(x), 1 / float(y)))
-                if x >= 0 and y != 0
-                else self._raise_invalid_root(x, y)
-            )
         }
 
         # Retrieve the operation function based on the operation name
