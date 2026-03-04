@@ -12,6 +12,19 @@ class Linearizer:
         evaluable by the calculator.
     """
 
+    mapping = {
+        '+': 'add',
+        '-': 'subtract',
+        '*': 'multiply',
+        '/': 'divide',
+        '^': 'power',
+        '#': 'root',
+        '&': 'modulus',
+        '\\': 'int_divide',
+        '%': 'percent',
+        '|': 'abs_diff'
+    }
+
     def __init__(self, expression: str):
         self.expression = expression
         self.a = 0
@@ -41,22 +54,11 @@ class Linearizer:
             Raises:
                 ValueError: If the symbol is not recognized as a valid operation.
         """
-        mapping = {
-            '+': 'add',
-            '-': 'subtract',
-            '*': 'multiply',
-            '/': 'divide',
-            '^': 'power',
-            '#': 'root',
-            '&': 'modulus',
-            '//': 'int_divide',
-            '%': 'percent',
-            '|': 'abs_diff'
-        }
-        if symbol not in mapping:
+
+        if symbol not in self.__class__.mapping:
             raise ValueError(f"Unrecognized symbol: {symbol}")
 
-        return mapping[symbol]
+        return self.__class__.mapping[symbol]
 
     def parse(self):
         """
@@ -65,8 +67,14 @@ class Linearizer:
             Raises:
                 ValueError: If the expression format is invalid or if operands are not numeric.
         """
+        pattern = r'^(\d+(?:\.\d+)?)\s*([+\-*/^#&\\%|])\s*(\d+(?:\.\d+)?)$'
 
-        experssionParts = re.findall(r'[\d.]+|[^\d.]+', self.expression)
+        match = re.match(pattern, self.expression)
+        if not match:
+            raise ValueError(
+                "Invalid expression format. Expected format: <number><operator><number>")
+
+        experssionParts = match.groups()
 
         if len(experssionParts) != 3:
             raise ValueError(
@@ -79,7 +87,7 @@ class Linearizer:
             raise ValueError(
                 "Invalid expression format. Missing operand or operator.")
 
-        if not (self.a.isnumeric() and self.b.isnumeric()):
+        if not self.a.replace('.', '', 1).isdigit() or not self.b.replace('.', '', 1).isdigit():
             raise ValueError(
                 "Invalid expression format. Operands must be numeric.")
 

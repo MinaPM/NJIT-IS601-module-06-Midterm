@@ -60,17 +60,42 @@ def calculator_repl():
                     continue
 
                 if command == 'help':
-                    # Display available commands
-                    print("\nAvailable commands:")
-                    print("\t"+", ".join(OperationFactory._operations.keys()
-                                         )+"\t"+"Perform calculations")
-                    print("\thistory \t Show calculation history")
-                    print("\tclear \t Clear calculation history")
-                    print("\tundo \t Undo the last calculation")
-                    print("\tredo \t Redo the last undone calculation")
-                    print("\tsave \t Save calculation history to file")
-                    print("\tload \t Load calculation history from file")
-                    print("\texit \t Exit the calculator")
+                    OutputFormatter.print_success('\n  Calculations')
+                    OutputFormatter.print_info('\n\tUsage:')
+                    print(f"\t  {OutputFormatter.format('<operation name>', OutputFormatter.WARNING_STYLE):<29}"
+                          f"  {OutputFormatter.format('Start an operation of a certain type', OutputFormatter.DEFAULT_STYLE)}")
+                    print(f"\t  {OutputFormatter.format('<operand><operator><operand>', OutputFormatter.WARNING_STYLE):<29}"
+                          f"  {OutputFormatter.format('Evaluate an expression', OutputFormatter.DEFAULT_STYLE)}")
+
+                    OutputFormatter.print_info("\n\tAvailable Operations:")
+                    for (label, sym) in Linearizer.mapping.items():
+                        print(f"\t  {OutputFormatter.format(f'[{sym}]', OutputFormatter.WARNING_STYLE):<29}"
+                              f"{OutputFormatter.format(label, OutputFormatter.DEFAULT_STYLE)}")
+
+                    # Rest of categories
+                    categories = {
+                        "History": [
+                            ("history", "Show calculation history"),
+                            ("clear",   "Clear calculation history"),
+                            ("undo",    "Undo the last calculation"),
+                            ("redo",    "Redo the last undone calculation"),
+                        ],
+                        "File": [
+                            ("save", "Save calculation history to file"),
+                            ("load", "Load calculation history from file"),
+                        ],
+                        "General": [
+                            ("exit", "Exit the calculator"),
+                        ],
+                    }
+
+                    for category, commands in categories.items():
+                        print(
+                            f"\n  {OutputFormatter.format(category, OutputFormatter.SUCCESS_STYLE)}")
+                        for cmd, desc in commands:
+                            print(f"\t{OutputFormatter.format(cmd, OutputFormatter.WARNING_STYLE):<29}"
+                                  f"{OutputFormatter.format(desc, OutputFormatter.DEFAULT_STYLE)}")
+
                     continue
 
                 if command == 'exit':
