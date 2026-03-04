@@ -272,6 +272,11 @@ class Modulus(Operation):
         super().validate_operands(a, b)
         if b == 0:
             raise ValidationError("Division by zero is not allowed")
+        elif (a < 0 or b < 0):
+            raise ValidationError("Negative values not supported for modulus")
+        elif (a % 1 != 0 or b % 1 != 0):
+            raise ValidationError(
+                "Modulus operation requires integer operands")
 
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         """
