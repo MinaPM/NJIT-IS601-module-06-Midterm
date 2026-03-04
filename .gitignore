@@ -234,7 +234,8 @@ wheels/
 venv/
 env/
 ENV/
-.env
+# Virtual environment file not ignored intentionally
+# .env
 .venv
 .python-version
 
