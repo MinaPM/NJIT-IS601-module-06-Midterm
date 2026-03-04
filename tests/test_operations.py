@@ -213,6 +213,82 @@ class TestRoot(BaseOperationTest):
     }
 
 
+class TestModulus(BaseOperationTest):
+    """Test Modulus operation."""
+
+    operation_class = Modulus
+    valid_test_cases = {
+        "basic_modulus": {"a": "5", "b": "3", "expected": "2"},
+        "zero_dividend": {"a": "0", "b": "5", "expected": "0"},
+        "large_integers": {"a": "1000", "b": "7", "expected": "6"},
+        "one_divisor": {"a": "5", "b": "1", "expected": "0"},
+    }
+    invalid_test_cases = {
+        "divide_by_zero": {
+            "a": "5",
+            "b": "0",
+            "error": ValidationError,
+            "message": "Division by zero is not allowed"
+        },
+        "negative_dividend": {
+            "a": "-5",
+            "b": "3",
+            "error": ValidationError,
+            "message": "Negative values not supported for modulus"
+        },
+        "negative_divisor": {
+            "a": "5",
+            "b": "-3",
+            "error": ValidationError,
+            "message": "Negative values not supported for modulus"
+        },
+        "both_negative": {
+            "a": "-5",
+            "b": "-3",
+            "error": ValidationError,
+            "message": "Negative values not supported for modulus"
+        },
+        "decimal_dividend": {
+            "a": "5.5",
+            "b": "3",
+            "error": ValidationError,
+            "message": "Modulus operation requires integer operands"
+        },
+        "decimal_divisor": {
+            "a": "5",
+            "b": "3.3",
+            "error": ValidationError,
+            "message": "Modulus operation requires integer operands"
+        },
+        "both_decimals": {
+            "a": "5.5",
+            "b": "3.3",
+            "error": ValidationError,
+            "message": "Modulus operation requires integer operands"
+        },
+    }
+
+
+class TestPercentage(BaseOperationTest):
+    """Test Percentage operation."""
+
+    operation_class = Percentage
+    valid_test_cases = {
+        "percentage_of_number": {"a": "50", "b": "200", "expected": "25"},
+        "zero_percentage": {"a": "0", "b": "200", "expected": "0"},
+        "full_percentage": {"a": "200", "b": "200", "expected": "100"},
+        "decimal_percentage": {"a": "25.5", "b": "212.5", "expected": "12"},
+    }
+    invalid_test_cases = {
+        "divide_by_zero": {
+            "a": "5",
+            "b": "0",
+            "error": ValidationError,
+            "message": "Total value cannot be zero for percentage calculation"
+        },
+    }
+
+
 class TestOperationFactory:
     """Test OperationFactory functionality."""
 
